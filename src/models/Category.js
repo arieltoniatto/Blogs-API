@@ -9,7 +9,7 @@ const SchemaCategory = (sequelize, DataTypes) => {
     },
     {
         timestamps: false,
-        tableName: 'Categories',
+        tableName: 'categories',
     });
 
     return CategoriesTable;

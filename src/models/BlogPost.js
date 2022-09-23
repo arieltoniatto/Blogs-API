@@ -17,7 +17,7 @@ const SchemaBlogPost = (sequelize, DataTypes) => {
     {
         createdAt: 'published',
         updatedAt: 'updated',
-        tableName: 'BlogPost',
+        tableName: 'blog_post',
     });
 
     BlogPostTable.associate = (models) => {

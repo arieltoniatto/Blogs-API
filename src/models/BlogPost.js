@@ -18,6 +18,7 @@ const SchemaBlogPost = (sequelize, DataTypes) => {
         createdAt: 'published',
         updatedAt: 'updated',
         tableName: 'blog_post',
+        underscored: true,
     });
 
     BlogPostTable.associate = (models) => {

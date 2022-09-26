@@ -11,13 +11,13 @@ const SchemaBlogPost = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             foreignKey: true,
         },
-        published: DataTypes.INTEGER,
-        updated: DataTypes.INTEGER,
+        published: DataTypes.DATE,
+        updated: DataTypes.DATE,
     },
     {
         createdAt: 'published',
         updatedAt: 'updated',
-        tableName: 'blog_post',
+        tableName: 'blog_posts',
         underscored: true,
     });
 

@@ -18,7 +18,7 @@ const LoginService = async ({ email, password }) => {
         return e;
     }
 
-    const token = generateToken({ email, password });
+    const token = generateToken({ email });
 
     return token;
 };

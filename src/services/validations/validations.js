@@ -21,8 +21,6 @@ const validateUser = (userData) => {
 const validateCategory = (data) => {
     const { error } = categorySchema.validate(data);
 
-    console.log(error);
-
     if (error) return { type: 'MISSING_FIELDS', message: error.message };
 
     return { type: null, message: '' };

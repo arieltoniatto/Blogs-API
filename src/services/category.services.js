@@ -4,8 +4,6 @@ const { validateCategory } = require('./validations/validations');
 const createCategory = async ({ name }) => {
     const error = validateCategory({ name });
 
-    console.log(error);
-
     if (error.type) {
         error.status = 400;
         return error;

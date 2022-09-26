@@ -15,7 +15,7 @@ const authTokenValidation = async (token) => {
     // }
 
     try {
-        const instrospection = await jwt.verify(token, TOKEN_SECRET);
+        const instrospection = jwt.verify(token, TOKEN_SECRET);
         return instrospection;
     } catch (e) {
         console.log('Err', e);

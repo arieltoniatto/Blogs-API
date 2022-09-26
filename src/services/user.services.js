@@ -35,7 +35,19 @@ const findAllUsers = async () => {
     return result;
 };
 
+const findById = async (id) => {
+    const result = await User.findOne({
+        attributes: ['id', 'displayName', 'email', 'image'],
+        where: { id },
+    });
+
+    if (!result) return { type: 'USER_MISSING', status: 404 };
+
+    return result;
+};
+
 module.exports = {
     createUser,
     findAllUsers,
+    findById,
 };

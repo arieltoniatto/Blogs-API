@@ -9,13 +9,11 @@ const createUser = async ({ displayName, email, password, image }) => {
         error.status = 400;
         return error;
     }
-    // console.log(email);
 
     const user = await User.findOne({
         where: { email },
     });
     
-    console.log(user);
     if (user) {
         const e = { type: 'INVALID_FIELDS', status: 409, message: 'User already registered' };
         return e;

@@ -6,7 +6,7 @@ const routers = express.Router();
 
 routers.post('/', createUser);
 routers.get('/', validateToken, findAllUsers);
-routers.get('/:id', validateToken, findById);
 routers.delete('/me', validateToken, deleteMe);
+routers.get('/:id', validateToken, findById);
 
 module.exports = routers;

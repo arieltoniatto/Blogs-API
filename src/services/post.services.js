@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize');
 const { Category, BlogPost, User, PostCategory } = require('../models/index');
+
+const op = sequelize.Op;
 
 const verifyCategId = async (ids) => {
     const findAllIds = await Category.findAndCountAll({
@@ -65,7 +68,7 @@ const createBlogPost = async ({ title, content, categoryIds }, auth) => {
 
 const getPost = async (auth) => {
     const { id } = await getIdByToken(auth);
-    const allPosts = BlogPost.findAll({
+    const allPosts = await BlogPost.findAll({
         where: { userId: id },
         include: [
             { model: User, as: 'user', attributes: { exclude: ['password'] } },
@@ -76,7 +79,7 @@ const getPost = async (auth) => {
 };
 
 const getPostById = async (id) => {
-    const post = BlogPost.findOne({
+    const post = await BlogPost.findOne({
         where: { id },
         include: [
             { model: User, as: 'user', attributes: { exclude: ['password'] } },
@@ -125,6 +128,23 @@ const deletePost = async (id, auth) => {
     return { type: 'UNAUTHORIZED_USER' };
 };
 
+const querySearch = async (q) => {
+    const term = `%${q}%`;
+
+    const search = await BlogPost.findAll({
+        where: {
+            [op.or]: {
+                title: { [op.like]: term }, content: { [op.like]: term },
+            },
+        },
+        include: [
+            { model: User, as: 'user', attributes: { exclude: ['password'] } },
+            { model: Category, as: 'categories' },
+        ],
+    });
+    return search;
+};
+
 module.exports = {
     createBlogPost,
     getPost,
@@ -132,4 +152,5 @@ module.exports = {
     updatePost,
     deletePost,
     getIdByToken,
+    querySearch,
 };

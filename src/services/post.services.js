@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Category, BlogPost, User } = require('../models/index');
+const { Category, BlogPost, User, PostCategory } = require('../models/index');
 
 const verifyCategId = async (ids) => {
     const findAllIds = await Category.findAndCountAll({
@@ -7,20 +7,32 @@ const verifyCategId = async (ids) => {
             id: ids,
         },
     });
-    if (findAllIds.length === 0 || findAllIds.count !== ids.length) {
-        return { type: 'INVALID_ID', message: '"categoryIds" not found' };
+    if (findAllIds.count !== ids.length) {
+        return { type: 'NOT_FOUND', message: '"categoryIds" not found' };
     }
-
     return { type: null, message: '' };
 };
 
-// const verifyFields = async ({ title, content, categoryIds }) => {
-//     if (!title || !content || !categoryIds) {
-//         return { type: 'MISSING_FIELDS', message: 'Some required fields are missing' };
-//     }
-    
-//     return { type: null, message: '' };
-// };
+const newPost = async (title, content, user) => {
+    const createPost = await BlogPost.create({
+        title, 
+        content,
+        userId: user.id, 
+        published: new Date(),
+        updated: new Date(),
+     });
+     return createPost;
+};
+
+const assignCategory = (postId, categoriesId) => {
+    try {
+        categoriesId.forEach(async (categ) => {
+            await PostCategory.create({ postId, categoryId: categ });
+        });
+    } catch (err) {
+        console.log('Error', err);
+    }
+};
 
 const getIdByToken = async (auth) => {
     const TOKEN_SECRET = process.env.JWT_SECRET;
@@ -34,25 +46,21 @@ const getIdByToken = async (auth) => {
 };
 
 const createBlogPost = async ({ title, content, categoryIds }, auth) => {
-    if (!title || !content || !categoryIds) {
+    if (!title || !content || categoryIds.length === 0) {
         return { type: 'MISSING_FIELDS', message: 'Some required fields are missing' };
     }
 
     const errorFields = await verifyCategId(categoryIds);
 
-    if (errorFields) return errorFields.message;
+    if (errorFields.type) return errorFields.message;
 
     const user = await getIdByToken(auth);
 
-    const newPost = await BlogPost.create({
-        title, 
-        content,
-        userId: user.id, 
-        published: new Date(),
-        updated: new Date(),
-     });
+    const post = await newPost(title, content, user);
+    
+    assignCategory(post.dataValues.id, categoryIds);
 
-     return newPost;
+    return post;
 };
 
 module.exports = {

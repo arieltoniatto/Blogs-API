@@ -89,8 +89,29 @@ const getPostById = async (id) => {
     return post;
 };
 
+const getUpdatedPost = async (id) => {
+    const result = await getPostById(id);
+    return result;
+};
+
+const updatePost = async (post, newData, auth) => {
+    if (!newData.content || !newData.title) return { type: 'MISSING_FIELDS' };
+    const user = await getIdByToken(auth);
+
+    const postUpdate = await BlogPost.update({
+        title: newData.title, content: newData.content, updatedAt: new Date(),
+    },
+    {
+        where: { id: post, userId: user.id },
+    });
+
+    if (postUpdate[0] !== 0) return getUpdatedPost(postUpdate[0]);
+    return { type: 'UNAUTHORIZED_USER' };
+};
+
 module.exports = {
     createBlogPost,
     getPost,
     getPostById,
+    updatePost,
 };

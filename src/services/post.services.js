@@ -109,9 +109,27 @@ const updatePost = async (post, newData, auth) => {
     return { type: 'UNAUTHORIZED_USER' };
 };
 
+const deletePost = async (id, auth) => {
+    const user = await getIdByToken(auth);
+
+    const result = await getPostById(id);
+
+    if (!result) return { type: 'NOT_FOUND' };
+
+    const postDelete = await BlogPost.destroy({
+        where: { id, userId: user.id },
+    });
+
+    if (postDelete !== 0) return null;
+
+    return { type: 'UNAUTHORIZED_USER' };
+};
+
 module.exports = {
     createBlogPost,
     getPost,
     getPostById,
     updatePost,
+    deletePost,
+    getIdByToken,
 };

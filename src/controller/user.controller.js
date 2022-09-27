@@ -23,8 +23,21 @@ const findById = async (req, res) => {
     res.status(200).json(result);
 };
 
+const deleteMe = async (req, res) => {
+    const auth = req.headers.authorization;
+    
+    const result = await user.deleteMe(auth);
+
+    if (result === 'UNAUTHORIZED_USER') {
+        return res.status(401).json({ message: 'Unauthorized user' });
+    }
+
+    return res.status(204).json();
+};
+
 module.exports = {
     createUser,
     findAllUsers,
     findById,
+    deleteMe,
 };

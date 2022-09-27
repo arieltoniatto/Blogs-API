@@ -1,5 +1,6 @@
 const { User } = require('../models/index');
 const { generateToken } = require('../utils/JWT');
+const { getIdByToken } = require('./post.services');
 const { validateUser } = require('./validations/validations');
 
 const createUser = async ({ displayName, email, password, image }) => {
@@ -44,8 +45,21 @@ const findById = async (id) => {
     return result;
 };
 
+const deleteMe = async (auth) => {
+    const user = await getIdByToken(auth);
+
+    const result = await User.destroy({
+        where: { id: user.id },
+    });
+
+    if (result !== 0) return null;
+
+    return 'UNAUTHORIZED_USER';
+};
+
 module.exports = {
     createUser,
     findAllUsers,
     findById,
+    deleteMe,
 };

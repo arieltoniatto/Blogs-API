@@ -15,6 +15,13 @@ const createPost = async (req, res) => {
     return res.status(201).json(result);
 };
 
+const getPost = async (req, res) => {
+    const auth = req.headers.authorization;
+    const result = await service.getPost(auth);
+    res.status(200).json(result);
+};
+
 module.exports = {
     createPost,
+    getPost,
 };

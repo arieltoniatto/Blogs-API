@@ -63,6 +63,19 @@ const createBlogPost = async ({ title, content, categoryIds }, auth) => {
     return post;
 };
 
+const getPost = async (auth) => {
+    const { id } = await getIdByToken(auth);
+    const allPosts = BlogPost.findAll({
+        where: { userId: id },
+        include: [
+            { model: User, as: 'user', attributes: { exclude: ['password'] } },
+            { model: Category, as: 'categories' },
+        ],
+    });
+    return allPosts;
+};
+
 module.exports = {
     createBlogPost,
+    getPost,
 };

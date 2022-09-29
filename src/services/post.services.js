@@ -117,15 +117,15 @@ const deletePost = async (id, auth) => {
 
     const result = await getPostById(id);
 
-    if (!result) return 'NOT_FOUND';
+    if (!result) return { type: 'NOT_FOUND' };
 
     const postDelete = await BlogPost.destroy({
         where: { id, userId: user.id },
     });
 
-    if (postDelete !== 0) return null;
+    if (postDelete !== 0) return { type: null };
 
-    return 'UNAUTHORIZED_USER';
+    return { type: 'UNAUTHORIZED_USER' };
 };
 
 const querySearch = async (q) => {

@@ -49,10 +49,10 @@ const deletePost = async (req, res) => {
     const { id } = req.params;
     const auth = req.headers.authorization;
     const result = await service.deletePost(id, auth);
-    if (result === 'UNAUTHORIZED_USER') {
+    if (result.type === 'UNAUTHORIZED_USER') {
         return res.status(401).json({ message: 'Unauthorized user' });
     }
-    if (result === 'NOT_FOUND') {
+    if (result.type === 'NOT_FOUND') {
         return res.status(404).json({ message: 'Post does not exist' });
     }
     res.status(204).json();

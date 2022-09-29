@@ -1,7 +1,7 @@
-const LoginService = require('../services/login.services');
+const service = require('../services/login.services');
 
 const auth = async (req, res) => {
-        const token = await LoginService(req.body);
+        const token = await service(req.body);
         if (token.type === 'MISSING_FIELDS') {
             return res.status(token.status).json({ message: token.message });
         }

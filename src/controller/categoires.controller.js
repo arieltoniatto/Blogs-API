@@ -1,7 +1,7 @@
-const category = require('../services/category.services');
+const service = require('../services/category.services');
 
 const findAllCategories = async (_req, res) => {
-    const result = await category.findAllCategories();
+    const result = await service.findAllCategories();
 
     res.status(200).json(result);
 };
@@ -9,7 +9,7 @@ const findAllCategories = async (_req, res) => {
 const createCategories = async (req, res) => {
     const newCateg = req.body;
 
-    const result = await category.createCategory(newCateg);
+    const result = await service.createCategory(newCateg);
 
     if (result.type) return res.status(result.status).json({ message: '"name" is required' });
 
